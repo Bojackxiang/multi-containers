@@ -5,11 +5,11 @@ services:
   - docker
 
 before_install:
-  - docker build -t alex/react-test -f ./client/Dockerfile.dev ./client
+  #  build client 
+  - docker build -t alex/client -f ./client/Dockerfile ./client
 
 script:
-  - docker run alex/react-test npm test -- --coverage
-
+  - docker run alex/client npm test -- --coverage
 # after_success:
 #   - docker build -t stephengrider/multi-client ./client
 #   - docker build -t stephengrider/multi-nginx ./nginx
