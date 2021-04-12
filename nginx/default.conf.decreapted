@@ -1,0 +1,35 @@
+upstream client {
+  server client:3000;
+}
+
+upstream api {
+  server api:5000;
+}
+
+server {
+  listen 80;
+
+  # react 的解决问题
+  location / {
+    proxy_pass http://client;
+  }
+
+  # 解决 react 的 浏览器的问题
+  location /sockjs-node {
+    proxy_pass http://client;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+  }
+
+  # 解决 api 的页面redirect问题
+  location /api {
+    rewrite /api/(.*) /$1 break;
+    proxy_pass http://api;
+  }
+}
+
+# tell the nginx there are two up streams 
+# client and server 
+# if / -> go the to client 
+# if /api -> go to the server 
