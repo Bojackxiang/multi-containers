@@ -6,7 +6,7 @@ services:
 
 before_install:
   #  build client 
-  - docker build -t alex/client_react -f ./client_react/Dockerfile ./client
+  - docker build -t alex/client_react -f ./client_react/Dockerfile ./client_react
 
 script:
   - docker run alex/client npm test -- --coverage
