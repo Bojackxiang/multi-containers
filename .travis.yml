@@ -4,31 +4,30 @@ language: node_js
 # 这个也是标配
 sudo: required
 
-
 services:
   - docker
 
-# Running a container checking if it can build the container successfully 
+# Running a container checking if it can build the container successfully
 before_install:
-  #  build client 
+  #  build client
   - docker build -t alex/client_react -f ./client_react/Dockerfile.dev ./client_react
 
-# Running the test, and expect the test can exit successfully 
+# Running the test, and expect the test can exit successfully
 script:
   - docker run -e CI=true alex/client_react npm test -- --coverage
-# after_success:
-#   - docker build -t stephengrider/multi-client ./client
-#   - docker build -t stephengrider/multi-nginx ./nginx
-#   - docker build -t stephengrider/multi-server ./server
-#   - docker build -t stephengrider/multi-worker ./worker
-#   # Log in to the docker CLI
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-#   # Take those images and push them to docker hub
-#   - docker push stephengrider/multi-client
-#   - docker push stephengrider/multi-nginx
-#   - docker push stephengrider/multi-server
-#   - docker push stephengrider/multi-worker
 
+after_success:
+  - docker build -t alex/multi-client ./client_react
+  - docker build -t alex/multi-nginx ./nginx
+  - docker build -t alex/multi-server ./server
+  - docker build -t laex/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push batmandocode/multi-client
+  - docker push batmandocode/multi-nginx
+  - docker push batmandocode/multi-server
+  - docker push batmandocode/multi-worker
 # deploy:
 #   provider: elasticbeanstalk
 #   region: us-west-1
